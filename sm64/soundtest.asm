@@ -86,9 +86,9 @@ SNDTEST_MENU_SETSOUND equ 1
     
     la    a0, 0x80339D20
     li    a1, 0x00577BC0
-    lui   a2, hi(0x80339CF4)
+    lw.u  a2, 0x80339CF4
     jal   0x80278A78
-    lw    a2, lo(0x80339CF4) (a2)
+    lw.l  a2, 0x80339CF4
 
     li    a0, 0x10
     li    a1, 0x001076A0
@@ -99,7 +99,8 @@ SNDTEST_MENU_SETSOUND equ 1
     li    a1, 0x001076D0
     li    a2, 0x00112B50
     jal   0x80278228
-    addiu a0, r0, 0x02
+    li    a0, 0x02
+
     // load my data
     li    a0, SEG_MYCODE_RAM
     li    a1, SEG_MYCODE_ROM
