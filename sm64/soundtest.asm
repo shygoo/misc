@@ -79,18 +79,16 @@ SNDTEST_MENU_SETSOUND equ 1
 
 .org 0x80248A40
     // shortened original code to fit
-    lui   at, 0x8034
-    sw    v0, 0x9CF4(at)
-    or    a1, v0, r0
+    sw    v0, 0x80339CF4
+    move  a1, v0
     jal   0x80277930
     addiu a0, r0, 0x18
     
-    lui   t0, 0x8034
-    addiu a0, t0, 0x9D20
-    lui   a1, 0x0057
-    addiu a1, a1, 0x7BC0
+    la    a0, 0x80339D20
+    li    a1, 0x00577BC0
+    lui   a2, hi(0x80339CF4)
     jal   0x80278A78
-    lw    a2, 0x9CF4 (t0)
+    lw    a2, lo(0x80339CF4) (a2)
 
     li    a0, 0x10
     li    a1, 0x001076A0
