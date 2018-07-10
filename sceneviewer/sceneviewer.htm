@@ -1,0 +1,53 @@
+<script src="three.min.js"></script>
+<script src="F3D.js"></script>
+<script src="F3DEX2.js"></script>
+<script src="n64scene.js"></script>
+
+<input type="file" id="data"/><br>
+<div id="scene"></div>
+
+<script>
+
+var n64scene = new N64Scene("#scene", {width: 1280, height: 720, singleBlockMode: true});
+n64scene.ucSetClass(F3D);
+n64scene.ucSetVerbose(true);
+//n64scene.setWireframe(true);
+
+var domData = document.querySelector('#data');
+domData.onchange = function()
+{
+    var fr = new FileReader();
+    fr.readAsArrayBuffer(this.files[0]);
+
+    fr.onloadend = function()
+    {
+        //console.log('attempting to draw');
+        n64scene.setRom(fr.result);
+        n64scene.startAnimation();
+        var entrypoint = n64scene.getU32(0x00);
+
+        console.log('entrypoint ' + entrypoint.toString(16));
+
+        n64scene.ucExecute(entrypoint);
+        var mesh = n64scene.ucFlushMesh();		
+		n64scene.add(mesh);
+    }
+}
+
+n64scene.reset();
+
+var geom = new THREE.Geometry();
+geom.vertices.push(new THREE.Vector3(-10, 0, 0));
+geom.vertices.push(new THREE.Vector3(0, 10, 0));
+geom.vertices.push(new THREE.Vector3(0, -10, 0));
+
+var face = new THREE.Face3(0, 1, 2);
+
+var pointMaterial = new THREE.PointsMaterial({ size: 10, sizeAttenuation: false, color: 0xffffff });
+var dots = new THREE.Points(geom, pointMaterial);
+n64scene.scene.add(dots);
+n64scene.draw();
+
+//var domVertices = document.querySelector('#vertices');
+//n64scene.startAnimation();
+</script>
